@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { ArticleModel } from '../../models/article.model';
-import { ArticleHeadlineFilterModel } from '../../models/filter.model';
+import { ArticleFilterModel, ArticleHeadlineFilterModel } from '../../models/filter.model';
 import { ArticleService } from '../../services/article.service';
 import { GetListArticleHeadlineAction, LoadMoreArticleHeadlienAction } from './article-headline.actions';
 import { patch, append } from '@ngxs/store/operators';
@@ -19,6 +19,7 @@ export interface ArticleHeadlineStateModel {
     status: 'initial',
     filters: {
       category: 'general',
+      country: 'us',
       page: 1,
       pageSize: 10
     }

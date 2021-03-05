@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, NavController } from '@ionic/angular';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { ArticleSourceModel } from 'src/app/core/models/article-source.model';
@@ -19,7 +19,8 @@ export class CategoryPage implements OnInit {
 
   constructor(
     private store: Store,
-    private loading: LoadingController
+    private loading: LoadingController,
+    private navCtrl: NavController
   ) { }
 
   async ngOnInit() {
@@ -39,6 +40,9 @@ export class CategoryPage implements OnInit {
   }
 
 
+  viewDetail(source: ArticleSourceModel) {
+    this.navCtrl.navigateForward(['tabs', 'category', 'search'])
+  }
   getArticleSources() {
     this.store.dispatch(new GetArticleSourceListAction());
   }

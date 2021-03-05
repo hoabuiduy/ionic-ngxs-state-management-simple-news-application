@@ -6,7 +6,15 @@ import { SearchPage } from './search.page';
 const routes: Routes = [
   {
     path: '',
-    component: SearchPage
+    children: [
+      {
+        path: '',
+        component: SearchPage
+      }, {
+        path: 'articleDetail',
+        loadChildren: () => import('../article-detail/article-detail.module').then(m => m.ArticleDetailPageModule)
+      }
+    ]
   }
 ];
 
@@ -14,4 +22,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class SearchPageRoutingModule {}
+export class SearchPageRoutingModule { }

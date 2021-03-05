@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Article Detail</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <h1>{{article?.title}}</h1>
+  <p>
+    <ion-text color="medium">
+      {{article?.publishedAt|date}}
+    </ion-text>
+  </p>
+  <p class="ion-text-center">
+    <img [src]="article?.urlToImage" onerror="this.onerror=null;this.src='assets/icon/favicon.png';" />
+  </p>
+
+  <p [innerHTML]="article?.content"></p>
+
+  <h4 class="ion-text-right">{{article?.author}}</h4>
+</ion-content>

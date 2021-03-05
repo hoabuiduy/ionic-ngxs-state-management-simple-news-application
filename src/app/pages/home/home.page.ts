@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { IonInfiniteScroll, LoadingController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { IonInfiniteScroll, LoadingController, NavController } from '@ionic/angular';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { ArticleSourceModel } from 'src/app/core/models/article-source.model';
+import { ArticleModel } from 'src/app/core/models/article.model';
 import { GetListArticleHeadlineAction, LoadMoreArticleHeadlienAction } from 'src/app/core/states/article-headline/article-headline.actions';
 import { ArticleHeadlineState } from 'src/app/core/states/article-headline/article-headline.state';
 import { ArticleState } from 'src/app/core/states/articles/article.state';
@@ -18,17 +20,17 @@ export class HomePage implements OnInit {
   private infiniteEl: IonInfiniteScroll;
   private refresher: HTMLIonRefresherElement;
 
-  @Select(ArticleHeadlineState.articleHeadlines) articleHeadlines$: Observable<ArticleSourceModel[]>;
+  @Select(ArticleHeadlineState.articleHeadlines) articleHeadlines$: Observable<ArticleModel[]>;
   @Select(ArticleHeadlineState.status) artcleHeadlineStatus$: Observable<string>;
 
 
   constructor(
     private store: Store,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private navCtrl: NavController
   ) { }
 
   async ngOnInit() {
-
     this.artcleHeadlineStatus$.subscribe(async (data) => {
       switch (data) {
         case 'loading':
@@ -39,14 +41,24 @@ export class HomePage implements OnInit {
         case 'error':
           this.loadingEl?.dismiss();
           this.infiniteEl?.complete();
-          this.refresher.complete();
+          this.refresher?.complete();
           break;
       }
     });
     this.getArticleHeadlines('loading');
   }
 
+  viewDetail(article: ArticleModel) {
+    this.navCtrl.navigateForward(['tabs', 'home', 'articleDetail'], {
+      state: {
+        article
+      },
+    });
+  }
 
+  goToSearch() {
+    this.navCtrl.navigateForward(['tabs', 'search']);
+  }
   loadMore(infinite: any) {
     this.infiniteEl = infinite.target;
     this.loadMoreArticleHeadlines();

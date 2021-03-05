@@ -1,22 +1,28 @@
 import { Injectable } from '@angular/core';
 import { State, Action, StateContext, Selector } from '@ngxs/store';
-import { ArticleSourceModel } from '../../models/article-source.model';
 import { ArticleModel } from '../../models/article.model';
+import { ArticleFilterModel } from '../../models/filter.model';
 import { ArticleService } from '../../services/article.service';
-import { GetArticleSourceListAction } from '../article-source/article-source.actions';
+import { GetArticleListAction } from './article.actions';
 
 
 
-export interface NewsStateModel {
+export interface ArticleStateModel {
   items: ArticleModel[];
   status: string;
+  filters: ArticleFilterModel;
 }
 
-@State<NewsStateModel>({
+@State<ArticleStateModel>({
   name: 'news',
   defaults: {
     status: '',
-    items: []
+    items: [],
+    filters: {
+      q: '*',
+      page: 1,
+      pageSize: 10
+    }
   }
 })
 @Injectable()
@@ -29,19 +35,22 @@ export class ArticleState {
 
 
   @Selector()
-  static topNewsHeadlines(state: NewsStateModel) {
+  static listArticle(state: ArticleStateModel) {
     return state.items;
-
   }
 
 
-  @Action(GetArticleSourceListAction)
-  async getArticleListAction(ctx: StateContext<NewsStateModel>) {
+  @Action(GetArticleListAction)
+  async getArticleListAction(ctx: StateContext<ArticleStateModel>, action: GetArticleListAction) {
+    const state = ctx.getState();
     ctx.patchState({
       status: 'loading'
     });
     try {
-      const res = await this.newsService.getArticleTopHeadlines().toPromise();
+      const res = await this.newsService.getArticleList({
+        ...state.filters,
+        ...action.filters
+      }).toPromise();
       ctx.patchState({
         status: 'success',
         items: res['articles']

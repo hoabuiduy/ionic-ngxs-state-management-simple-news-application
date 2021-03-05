@@ -6,7 +6,16 @@ import { CategoryPage } from './category.page';
 const routes: Routes = [
   {
     path: '',
-    component: CategoryPage
+    children: [
+      {
+        path: '',
+        component: CategoryPage
+      },
+      {
+        path: 'search',
+        loadChildren: () => import('../category-search/category-search.module').then(m => m.CategorySearchPageModule)
+      }
+    ]
   }
 ];
 
@@ -14,4 +23,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class CategoryPageRoutingModule {}
+export class CategoryPageRoutingModule { }

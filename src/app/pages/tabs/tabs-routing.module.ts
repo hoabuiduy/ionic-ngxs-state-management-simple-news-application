@@ -9,15 +9,19 @@ const routes: Routes = [
     children: [
       {
         path: 'home',
-        loadChildren: () =>  import('../home/home.module').then(m=>m.HomePageModule)
+        loadChildren: () => import('../home/home.module').then(m => m.HomePageModule)
       },
       {
         path: 'category',
-        loadChildren: () => import('../category/category.module').then(m=>m.CategoryPageModule)
+        loadChildren: () => import('../category/category.module').then(m => m.CategoryPageModule)
       },
       {
         path: 'search',
-        loadChildren: () =>  import('../search/search.module').then(m=>m.SearchPageModule)
+        loadChildren: () => import('../search/search.module').then(m => m.SearchPageModule)
+      },
+      {
+        path: 'favorite',
+        loadChildren: () => import('../favorite/favorite.module').then(m => m.FavoritePageModule)
       },
       {
         path: '',
@@ -28,7 +32,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo:'tabs',
+    redirectTo: 'tabs',
     pathMatch: 'full'
   }
 ];
@@ -36,4 +40,4 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
 })
-export class TabsPageRoutingModule {}
+export class TabsPageRoutingModule { }
