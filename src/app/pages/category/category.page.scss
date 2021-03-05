@@ -1,0 +1,16 @@
+:host {
+  ion-card {
+    height: 100%;
+    width: 100%;
+
+    ion-card-content {
+      height: 100%;
+      text-align: center;
+      white-space: pre-wrap;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+}
