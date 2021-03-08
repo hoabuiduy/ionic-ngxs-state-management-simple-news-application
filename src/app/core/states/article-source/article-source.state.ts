@@ -6,7 +6,7 @@ import { GetArticleSourceListAction } from './article-source.actions';
 
 export interface ArticleSourceStateModel {
   items: ArticleSourceModel[];
-  status: string;
+  status: { code: string, message?: string };
 }
 
 
@@ -14,7 +14,9 @@ export interface ArticleSourceStateModel {
 @State<ArticleSourceStateModel>({
   name: 'articleSource',
   defaults: {
-    status: '',
+    status: {
+      code: ''
+    },
     items: []
   }
 })
@@ -37,17 +39,29 @@ export class ArticleSourceState {
   @Action(GetArticleSourceListAction)
   async getListArticleSource(ctx: StateContext<ArticleSourceStateModel>) {
     ctx.patchState({
-      status: 'loading'
+      status: {
+        code: 'loading'
+      }
     });
     try {
-      const res = await this.articleService.getArticleSources().toPromise();
+      const res = await this.articleService.getArticleSources();
+      const sources = res['data']['sources'];
+      const code = res['data']['status'];
+      if (code === 'error') {
+        throw res['data']['message'];
+      }
       ctx.patchState({
-        status: 'success',
-        items: res['sources']
+        status: {
+          code: 'success'
+        },
+        items: sources
       });
-    } catch {
+    } catch (ex) {
       ctx.patchState({
-        status: 'error',
+        status: {
+          code: 'error',
+          message: ex
+        },
         items: []
       });
     }

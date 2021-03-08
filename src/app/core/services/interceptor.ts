@@ -7,7 +7,7 @@ export class NewsInterceptor implements HttpInterceptor {
         return next.handle(request.clone({
             url: `${API_HOST}${request.url}`,
             setHeaders: {
-                'X-Api-Key': 'b9583ce538434795b480ed47375d275d'
+                'X-Api-Key': '2e0829a3a8cc48e2bd12bc85a2477252' //'b9583ce538434795b480ed47375d275d'
             }
         }));
     }

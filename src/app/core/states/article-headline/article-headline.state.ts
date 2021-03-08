@@ -8,7 +8,7 @@ import { patch, append } from '@ngxs/store/operators';
 
 export interface ArticleHeadlineStateModel {
   items: ArticleModel[];
-  status: string;
+  status: { code: string, message?: string };
   filters: ArticleHeadlineFilterModel;
 }
 
@@ -16,12 +16,14 @@ export interface ArticleHeadlineStateModel {
   name: 'articleHeadline',
   defaults: {
     items: [],
-    status: 'initial',
+    status: {
+      code: 'initial'
+    },
     filters: {
       category: 'general',
-      country: 'us',
       page: 1,
-      pageSize: 10
+      pageSize: 10,
+      country: 'us'
     }
   }
 })
@@ -45,24 +47,34 @@ export class ArticleHeadlineState {
   async getListArticleHealine(ctx: StateContext<ArticleHeadlineStateModel>, action: GetListArticleHeadlineAction) {
     const state = ctx.getState();
     ctx.patchState({
-      status: action.loadingStatus
+      status: {
+        code: action.loadingStatus
+      }
     });
     try {
+
       const res = await this.articleService.getArticleTopHeadlines({
         ...state.filters,
         page: 1
-      }).toPromise();
+      });
+      const articles = res['data']['articles'];
+      const code = res['data']['status'];
+      if (code === 'error') {
+        throw res['data']['message'];
+      }
       ctx.patchState({
-        status: 'success',
-        items: res['articles'],
+        status: {
+          code: 'success'
+        },
+        items: articles,
         filters: {
           ...state.filters,
           page: 1
         }
       })
-    } catch {
+    } catch (ex) {
       ctx.patchState({
-        status: 'error',
+        status: { code: 'error', message: ex },
         items: []
       })
     }
@@ -72,32 +84,44 @@ export class ArticleHeadlineState {
   async loadMoreArticleHeadline(ctx: StateContext<ArticleHeadlineStateModel>) {
     const state = ctx.getState();
     ctx.patchState({
-      status: 'loadmore'
+      status: {
+        code: 'loadmore'
+      }
     });
     try {
       const res = await this.articleService.getArticleTopHeadlines({
         ...state.filters,
         page: state.filters.page + 1
-      }).toPromise();
-      if (res['articles'].length < 10) {
+      });
+      const articles = res['data']['articles'];
+      const code = res['data']['status'];
+      if (code === 'error') {
+        throw res['data']['message'];
+      }
+      if (articles.length < 10) {
         ctx.patchState({
-          status: 'empty'
+          status: {
+            code: 'empty'
+          }
         });
       } else {
         ctx.patchState({
-          status: 'success',
+          status: { code: 'success' },
           filters: {
             ...state.filters,
             page: state.filters.page + 1
           }
         })
         ctx.setState(patch({
-          items: append(res['articles'])
+          items: append(articles)
         }))
       }
-    } catch {
+    } catch (ex) {
       ctx.patchState({
-        status: 'error',
+        status: {
+          code: 'error',
+          message: ex
+        },
         items: []
       })
     }

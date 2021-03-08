@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonInfiniteScroll, LoadingController, NavController } from '@ionic/angular';
+import { IonInfiniteScroll, LoadingController, NavController, ToastController } from '@ionic/angular';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { ArticleSourceModel } from 'src/app/core/models/article-source.model';
@@ -21,18 +21,18 @@ export class HomePage implements OnInit {
   private refresher: HTMLIonRefresherElement;
 
   @Select(ArticleHeadlineState.articleHeadlines) articleHeadlines$: Observable<ArticleModel[]>;
-  @Select(ArticleHeadlineState.status) artcleHeadlineStatus$: Observable<string>;
-
+  @Select(ArticleHeadlineState.status) artcleHeadlineStatus$: Observable<{ code, message?}>;
 
   constructor(
     private store: Store,
     private loadingCtrl: LoadingController,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private toastCtrl: ToastController
   ) { }
 
   async ngOnInit() {
     this.artcleHeadlineStatus$.subscribe(async (data) => {
-      switch (data) {
+      switch (data['code']) {
         case 'loading':
           this.loadingEl = await this.loadingCtrl.create();
           await this.loadingEl?.present();
@@ -42,6 +42,13 @@ export class HomePage implements OnInit {
           this.loadingEl?.dismiss();
           this.infiniteEl?.complete();
           this.refresher?.complete();
+          if (data['code'] === 'error') {
+            (await this.toastCtrl.create({
+              message: data['message'],
+              duration: 3000,
+              color: 'danger'
+            })).present();
+          }
           break;
       }
     });

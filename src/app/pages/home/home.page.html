@@ -41,7 +41,7 @@
     </ion-row>
   </ion-grid>
   <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMore($event)"
-    [disabled]="(artcleHeadlineStatus$|async) === 'empty'">
+    [disabled]="(artcleHeadlineStatus$|async).code === 'empty'">
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>

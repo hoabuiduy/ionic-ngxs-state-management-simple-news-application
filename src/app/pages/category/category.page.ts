@@ -28,11 +28,11 @@ export class CategoryPage implements OnInit {
       switch (data) {
         case 'loading':
           this.loadingEl = await this.loading.create();
-          await this.loadingEl.present();
+          await this.loadingEl?.present();
           break;
         case 'success':
         case 'error':
-          this.loadingEl.dismiss();
+          this.loadingEl?.dismiss();
           break;
       }
     })
