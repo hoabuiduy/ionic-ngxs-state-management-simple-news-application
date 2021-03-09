@@ -5,6 +5,7 @@ import { ArticleFilterModel, ArticleHeadlineFilterModel } from '../../models/fil
 import { ArticleService } from '../../services/article.service';
 import { GetListArticleHeadlineAction, LoadMoreArticleHeadlienAction } from './article-headline.actions';
 import { patch, append } from '@ngxs/store/operators';
+import { PAGE_SIZE } from 'src/app/shared/constants';
 
 export interface ArticleHeadlineStateModel {
   items: ArticleModel[];
@@ -22,7 +23,7 @@ export interface ArticleHeadlineStateModel {
     filters: {
       category: 'general',
       page: 1,
-      pageSize: 10,
+      pageSize: PAGE_SIZE,
       country: 'us'
     }
   }
@@ -98,7 +99,7 @@ export class ArticleHeadlineState {
       if (code === 'error') {
         throw res['data']['message'];
       }
-      if (articles.length < 10) {
+      if (articles.length < PAGE_SIZE) {
         ctx.patchState({
           status: {
             code: 'empty'

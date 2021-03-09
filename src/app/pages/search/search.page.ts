@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { LoadingController, NavController, ToastController } from '@ionic/angular';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
+import { ArticleSourceModel } from 'src/app/core/models/article-source.model';
 import { ArticleModel } from 'src/app/core/models/article.model';
 import { ArticleFilterModel } from 'src/app/core/models/filter.model';
-import { GetArticleListAction, LoadMoreArticleListAction } from 'src/app/core/states/articles/article.actions';
+import { GetArticleListAction, LoadMoreArticleListAction, SetArticleSourceAction } from 'src/app/core/states/articles/article.actions';
 import { ArticleState } from 'src/app/core/states/articles/article.state';
 
 @Component({
@@ -12,16 +13,19 @@ import { ArticleState } from 'src/app/core/states/articles/article.state';
   templateUrl: './search.page.html',
   styleUrls: ['./search.page.scss'],
 })
-export class SearchPage implements OnInit {
+export class SearchPage implements OnInit, OnDestroy {
 
   public keywords = '';
   public infiniteEl: HTMLIonInfiniteScrollElement;
   public loadingEl: HTMLIonLoadingElement;
+  public refresher: HTMLIonRefresherElement;
 
+  private triggerSearch: boolean = false;
 
   @Select(ArticleState.listArticle) listArticle$: Observable<ArticleModel[]>;
   @Select(ArticleState.filters) filters$: Observable<ArticleFilterModel>;
   @Select(ArticleState.status) listArticleStatus$: Observable<string>;
+  @Select(ArticleState.source) source$: Observable<ArticleSourceModel>;
 
   constructor(
     private navCtrl: NavController,
@@ -30,8 +34,10 @@ export class SearchPage implements OnInit {
     private toast: ToastController) { }
 
   ngOnInit() {
+
+    const source = this.store.selectSnapshot(ArticleState.source);
     this.filters$.subscribe(data => {
-      this.keywords = data.q;
+      this.keywords = data.keyword;
     });
     this.listArticleStatus$.subscribe(async (data) => {
       switch (data['code']) {
@@ -42,6 +48,7 @@ export class SearchPage implements OnInit {
         case 'success':
         case 'error':
           this.infiniteEl?.complete();
+          this.refresher?.complete();
           this.loadingEl?.dismiss();
           if (data['code'] === 'error') {
             (await this.toast.create({
@@ -53,12 +60,18 @@ export class SearchPage implements OnInit {
           break;
       }
     });
-    this.getListArticle({
-      q: '*',
-      page: 1
-    });
+    this.source$.subscribe(source => {
+      this.getListArticle({
+        page: 1,
+        sources: source?.id || ''
+      });
+    })
+
   }
 
+  ngOnDestroy() {
+    console.log('destroy search');
+  }
   viewDetail(article: ArticleModel) {
     this.navCtrl.navigateForward(['tabs', 'search', 'articleDetail'], {
       state: {
@@ -67,11 +80,32 @@ export class SearchPage implements OnInit {
     });
   }
 
-  search() {
+  search(event: any) {
+    this.triggerSearch = true;
     this.getListArticle({
-      q: this.keywords,
+      q: event?.target?.value !== '' ? event?.target?.value : '*',
+      keyword: event?.target?.value,
       page: 1
     });
+  }
+  onClearKeyword() {
+    if (!this.triggerSearch) {
+      return;
+    }
+    this.getListArticle({
+      q: '*',
+      keyword: '',
+      page: 1
+    });
+    this.triggerSearch = false;
+  }
+  doRefresh(refresher: any) {
+    this.refresher = refresher?.target;
+
+    this.getListArticle({
+      ...this.store.selectSnapshot(ArticleState.filters),
+      page: 1
+    }, 'initial')
   }
   loadMore(infinite: any) {
     this.infiniteEl = infinite.target;
@@ -79,15 +113,23 @@ export class SearchPage implements OnInit {
     this.loadMoreArticle(filters);
 
   }
-  getListArticle(filters: ArticleFilterModel) {
+  getListArticle(filters: ArticleFilterModel, status = 'loading') {
     this.store.dispatch(new GetArticleListAction({
       ...filters
-    }));
+    }, status));
   }
 
   loadMoreArticle(filters: ArticleFilterModel) {
     this.store.dispatch(new LoadMoreArticleListAction({
-      ...filters
+      ...filters,
+      page: filters.page + 1
     }))
+  }
+
+  clearSource() {
+    this.store.dispatch(new SetArticleSourceAction(null))
+  }
+  selectSource() {
+    this.navCtrl.navigateForward(['tabs', 'category']);
   }
 }

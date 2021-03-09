@@ -9,16 +9,26 @@
 
 <ion-content class="ion-padding">
   <h1>{{article?.title}}</h1>
-  <p>
-    <ion-text color="medium">
-      {{article?.publishedAt|date}}
-    </ion-text>
+  <p class="date">
+    <span>
+      <ion-text color="medium">
+        {{article?.publishedAt|date}}
+      </ion-text>
+    </span>
+    <span>
+      <ion-text>{{article?.source?.name}}</ion-text>
+    </span>
   </p>
   <p class="ion-text-center">
-    <img [src]="article?.urlToImage" onerror="this.onerror=null;this.src='assets/icon/favicon.png';" />
+    <img [src]="article?.urlToImage" onerror="this.onerror=null;this.src='assets/icon/favicon.png';"
+      (click)="openFullImage(article?.urlToImage)" />
   </p>
 
-  <p [innerHTML]="article?.content"></p>
+  <p [innerHTML]="article?.content || article?.description"></p>
 
   <h4 class="ion-text-right">{{article?.author}}</h4>
+
+  <ion-button (click)="openArticleOnBrowser(article)" expand="block" shape="round">
+    View full on Browser
+  </ion-button>
 </ion-content>

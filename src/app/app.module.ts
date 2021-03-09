@@ -11,6 +11,7 @@ import { ArticleState } from './core/states/articles/article.state';
 import { NewsInterceptor } from './core/services/interceptor';
 import { ArticleHeadlineState } from './core/states/article-headline/article-headline.state';
 import { ArticleSourceState } from './core/states/article-source/article-source.state';
+import { ComponentModule } from './components/component.module';
 
 @NgModule({
   declarations: [AppComponent],

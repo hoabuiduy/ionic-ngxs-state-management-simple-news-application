@@ -1,0 +1,18 @@
+<ion-card class="ion-no-margin ion-no-padding ion-activatable ripple-parent">
+  <ion-ripple-effect></ion-ripple-effect>
+  <ion-card-content>
+    <ion-item lines="none" class="ion-no-padding">
+      <ion-thumbnail slot="start">
+        <img [src]="article.urlToImage" onerror="this.onerror=null;this.src='assets/icon/favicon.png';" />
+      </ion-thumbnail>
+      <ion-label class="ion-no-margin">
+        <h4> {{article.title}}</h4>
+        <p>{{article.publishedAt|date}}</p>
+        <p [innerHTML]="article.description"> </p>
+        <p class="ion-text-right">
+          <ion-text color="dark"> <b>{{article.source.name}}</b></ion-text>
+        </p>
+      </ion-label>
+    </ion-item>
+  </ion-card-content>
+</ion-card>

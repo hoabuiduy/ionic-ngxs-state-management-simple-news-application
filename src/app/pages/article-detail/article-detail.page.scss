@@ -1,0 +1,13 @@
+p {
+  &.date {
+    display: flex;
+
+    span {
+      &:last-child {
+        flex: 1;
+        text-align: right;
+        font-weight: bold;
+      }
+    }
+  }
+}

@@ -5,3 +5,5 @@ export const API_PATH = {
     TOP_HEADLINES: '/v2/top-headlines',
     EVERYTHING: '/v2/everything'
 };
+
+export const PAGE_SIZE = 10;

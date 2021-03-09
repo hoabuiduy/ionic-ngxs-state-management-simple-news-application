@@ -9,11 +9,10 @@
     <ion-toolbar>
       <ion-title size="large">Sources</ion-title>
     </ion-toolbar>
-
   </ion-header>
 
   <ion-grid>
-    <ion-row>
+    <ion-row *ngIf="(articleSourceStatus$|async).code !== 'loading'; else skeleton">
       <ion-col *ngFor="let source of articleSources$|async" size-xs="6" size-sm="6" size-md="6" size-lg="6" size-xl="6">
         <ion-card class="ion-activatable ripple-parent ion-no-margin" (click)="viewDetail(source)">
           <ion-ripple-effect></ion-ripple-effect>
@@ -25,3 +24,10 @@
     </ion-row>
   </ion-grid>
 </ion-content>
+<ng-template #skeleton>
+  <ion-row>
+    <ion-col *ngFor="let num of [1,1,1,1,1,1,1,1,1,1]" size-xs="6" size-sm="6" size-md="6" size-lg="6" size-xl="6">
+      <ion-skeleton-text animated></ion-skeleton-text>
+    </ion-col>
+  </ion-row>
+</ng-template>

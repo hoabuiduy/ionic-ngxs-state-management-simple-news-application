@@ -10,28 +10,31 @@
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Search</ion-title>
+      <ion-buttons slot="end">
+        <ion-chip color="primary" mode="ios" *ngIf="source$|async as source ;else selectSourceTpl">
+          <ion-label>{{source.name}}</ion-label>
+          <ion-icon name="close" (click)="clearSource()"></ion-icon>
+        </ion-chip>
+        <ng-template #selectSourceTpl>
+          <ion-button (click)="selectSource()" expand="block" fill="clear" shape="round">
+            <ion-icon slot="start" name="add"></ion-icon>
+            Select Source
+          </ion-button>
+        </ng-template>
+      </ion-buttons>
     </ion-toolbar>
-    <ion-searchbar [(ngModel)]="keywords" placeholder="Article title" inputmode="decimal" (search)="search()">
+
+    <ion-searchbar [(ngModel)]="keywords" placeholder="Search article" (search)="search($event)"
+      (ionClear)="onClearKeyword()">
     </ion-searchbar>
   </ion-header>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ion-grid>
     <ion-row>
       <ion-col size="12" *ngFor="let n of listArticle$|async ">
-        <ion-card class="ion-no-margin ion-no-padding ion-activatable ripple-parent" (click)="viewDetail(n)">
-          <ion-ripple-effect></ion-ripple-effect>
-          <ion-card-content>
-            <ion-item lines="none" class="ion-no-padding">
-              <ion-thumbnail slot="start">
-                <img [src]="n.urlToImage" onerror="this.onerror=null;this.src='assets/icon/favicon.png';" />
-              </ion-thumbnail>
-              <ion-label>
-                <h4> {{n.title}}</h4>
-                <p>{{n.publishedAt|date}}</p>
-                <p [innerHTML]="n.description"> </p>
-              </ion-label>
-            </ion-item>
-          </ion-card-content>
-        </ion-card>
+        <app-article [article]="n" (click)="viewDetail(n)"> </app-article>
       </ion-col>
     </ion-row>
   </ion-grid>

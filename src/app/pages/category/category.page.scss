@@ -2,6 +2,7 @@
   ion-card {
     height: 100%;
     width: 100%;
+    min-height: 100px;
 
     ion-card-content {
       height: 100%;
@@ -11,6 +12,11 @@
       align-items: center;
       justify-content: center;
     }
+  }
+
+  ion-skeleton-text {
+    height: 100px;
+    border-radius: 8px;
   }
 
 }

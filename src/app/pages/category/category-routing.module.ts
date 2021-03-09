@@ -10,10 +10,6 @@ const routes: Routes = [
       {
         path: '',
         component: CategoryPage
-      },
-      {
-        path: 'search',
-        loadChildren: () => import('../category-search/category-search.module').then(m => m.CategorySearchPageModule)
       }
     ]
   }

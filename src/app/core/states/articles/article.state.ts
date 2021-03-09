@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 import { State, Action, StateContext, Selector, Select } from '@ngxs/store';
 import { append, patch } from '@ngxs/store/operators';
+import { PAGE_SIZE } from 'src/app/shared/constants';
+import { ArticleSourceModel } from '../../models/article-source.model';
 import { ArticleModel } from '../../models/article.model';
 import { ArticleFilterModel } from '../../models/filter.model';
 import { ArticleService } from '../../services/article.service';
-import { GetArticleListAction, LoadMoreArticleListAction } from './article.actions';
-
-
+import { GetArticleListAction, LoadMoreArticleListAction, SetArticleSourceAction } from './article.actions';
 
 export interface ArticleStateModel {
   items: ArticleModel[];
   status: { code: string, message?: string };
   filters: ArticleFilterModel;
+  source?: ArticleSourceModel;
 }
 
 @State<ArticleStateModel>({
@@ -25,8 +26,9 @@ export interface ArticleStateModel {
     filters: {
       q: '*',
       page: 1,
-      pageSize: 10
-    }
+      pageSize: PAGE_SIZE
+    },
+    source: null
   }
 })
 @Injectable()
@@ -37,6 +39,10 @@ export class ArticleState {
   }
 
 
+  @Selector()
+  static source(state: ArticleStateModel) {
+    return state.source;
+  }
 
   @Selector()
   static listArticle(state: ArticleStateModel) {
@@ -58,13 +64,14 @@ export class ArticleState {
     const state = ctx.getState();
     ctx.patchState({
       status: {
-        code: 'loading',
+        code: action.status || 'loading',
         message: ''
       }
     });
     try {
       const res = await this.newsService.getArticleList({
         ...state.filters,
+        ...action.filters,
         page: 1
       });
       const articles = res['data']['articles'];
@@ -108,10 +115,10 @@ export class ArticleState {
     try {
       const res = await this.newsService.getArticleList({
         ...state.filters,
-        page: state.filters.page + 1
+        ...action.filters
       });
       const articles = res['data']['articles'];
-      if (articles.length < 10) {
+      if (articles.length < PAGE_SIZE) {
         ctx.patchState({
           status: {
             code: 'empty'
@@ -124,7 +131,7 @@ export class ArticleState {
           },
           filters: {
             ...state.filters,
-            page: state.filters.page + 1
+            ...action.filters
           }
         })
         ctx.setState(patch({
@@ -140,5 +147,14 @@ export class ArticleState {
         items: []
       })
     }
+  }
+
+
+  @Action(SetArticleSourceAction)
+  setArticleSource(ctx: StateContext<ArticleStateModel>, action: SetArticleSourceAction) {
+    const state = ctx.getState();
+    ctx.patchState({
+      source: action.source
+    });
   }
 }

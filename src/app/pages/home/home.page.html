@@ -22,21 +22,7 @@
   <ion-grid>
     <ion-row>
       <ion-col size="12" *ngFor="let n of articleHeadlines$|async ">
-        <ion-card class="ion-no-margin ion-no-padding ion-activatable ripple-parent" (click)="viewDetail(n)">
-          <ion-ripple-effect></ion-ripple-effect>
-          <ion-card-content>
-            <ion-item lines="none" class="ion-no-padding">
-              <ion-thumbnail slot="start">
-                <img [src]="n.urlToImage" onerror="this.onerror=null;this.src='assets/icon/favicon.png';" />
-              </ion-thumbnail>
-              <ion-label>
-                <h4> {{n.title}}</h4>
-                <p>{{n.publishedAt|date}}</p>
-                <p [innerHTML]="n.description"> </p>
-              </ion-label>
-            </ion-item>
-          </ion-card-content>
-        </ion-card>
+        <app-article [article]="n" (click)="viewDetail(n)"></app-article>
       </ion-col>
     </ion-row>
   </ion-grid>
