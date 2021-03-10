@@ -102,7 +102,7 @@ export class ArticleHeadlineState {
       if (articles.length < PAGE_SIZE) {
         ctx.patchState({
           status: {
-            code: 'empty'
+            code: 'nomore'
           }
         });
       } else {

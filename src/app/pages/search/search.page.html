@@ -16,7 +16,7 @@
           <ion-icon name="close" (click)="clearSource()"></ion-icon>
         </ion-chip>
         <ng-template #selectSourceTpl>
-          <ion-button (click)="selectSource()" expand="block" fill="clear" shape="round">
+          <ion-button (click)="selectSource()" expand="block" shape="round">
             <ion-icon slot="start" name="add"></ion-icon>
             Select Source
           </ion-button>
@@ -31,15 +31,21 @@
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ion-grid>
-    <ion-row>
-      <ion-col size="12" *ngFor="let n of listArticle$|async ">
-        <app-article [article]="n" (click)="viewDetail(n)"> </app-article>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMore($event)"
-    [disabled]="(listArticleStatus$|async) === 'empty'">
+  <ng-container [ngSwitch]="(listArticleStatus$|async).code">
+    <ion-grid *ngSwitchDefault>
+      <ion-row>
+        <ion-col size="12" *ngFor="let n of listArticle$|async ">
+          <app-article [article]="n" (click)="viewDetail(n)"> </app-article>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <app-data-state *ngSwitchCase="'error'" [state]="listArticleStatus$|async"></app-data-state>
+    <app-data-state *ngSwitchCase="'empty'" [state]="listArticleStatus$|async"></app-data-state>
+
+  </ng-container>
+
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMore($event)" [disabled]="disableLoadmore()">
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>

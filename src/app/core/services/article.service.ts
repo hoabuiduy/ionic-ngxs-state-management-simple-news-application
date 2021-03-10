@@ -45,7 +45,7 @@ export class ArticleService {
 
   private buildHeaders() {
     return {
-      'X-Api-Key': '32a56f101b17410c9539c2edb01d28ab' //'b9583ce538434795b480ed47375d275d' ; 2e0829a3a8cc48e2bd12bc85a2477252 ; 32a56f101b17410c9539c2edb01d28ab
+      'X-Api-Key': 'b9583ce538434795b480ed47375d275d' //'b9583ce538434795b480ed47375d275d' ; 2e0829a3a8cc48e2bd12bc85a2477252 ; 32a56f101b17410c9539c2edb01d28ab
     }
   }
   private buildUrl(path: string) {
@@ -58,7 +58,9 @@ export class ArticleService {
     });
     const params = {};
     p.keys().map(k => {
-      params[k] = p.get(k).toString();
+      if (p.get(k)) {
+        params[k] = p.get(k).toString();
+      }
     })
 
     return params;

@@ -18,7 +18,7 @@ export class CategoryPage implements OnInit {
   @Select(ArticleSourceState.status) articleSourceStatus$: Observable<{ code, message?}>;
 
   constructor(
-    private store: Store,
+    public store: Store,
     private navCtrl: NavController
   ) { }
 

@@ -80,11 +80,21 @@ export class ArticleState {
       if (code === 'error') {
         throw message;
       }
+      if (articles.length === 0) {
+        ctx.patchState({
+          status: {
+            code: 'empty',
+            message: 'No data available'
+          }
+        })
+      } else {
+        ctx.patchState({
+          status: {
+            code: 'success'
+          }
+        })
+      }
       ctx.patchState({
-        status: {
-          code: 'success',
-          message: ''
-        },
         items: articles,
         filters: {
           ...state.filters,
@@ -118,10 +128,10 @@ export class ArticleState {
         ...action.filters
       });
       const articles = res['data']['articles'];
-      if (articles.length < PAGE_SIZE) {
+      if (articles.length === 0) {
         ctx.patchState({
           status: {
-            code: 'empty'
+            code: 'nomore'
           }
         });
       } else {
@@ -152,7 +162,6 @@ export class ArticleState {
 
   @Action(SetArticleSourceAction)
   setArticleSource(ctx: StateContext<ArticleStateModel>, action: SetArticleSourceAction) {
-    const state = ctx.getState();
     ctx.patchState({
       source: action.source
     });

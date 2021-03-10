@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { ArticleModel } from 'src/app/core/models/article.model';
 import { Plugins } from '@capacitor/core';
-
+const { Browser, Share } = Plugins;
 @Component({
   selector: 'app-article-detail',
   templateUrl: './article-detail.page.html',
@@ -23,17 +23,23 @@ export class ArticleDetailPage implements OnInit {
   }
 
   openArticleOnBrowser(article: ArticleModel) {
-    const { Browser } = Plugins;
     Browser.open({
       url: article.url
     })
   }
 
   openFullImage(imgUrl: string) {
-    const { Browser } = Plugins;
+
     Browser.open({
       url: imgUrl
     })
+  }
+
+  share() {
+    Share.share({
+      dialogTitle: 'Share This Article',
+      url: this.article?.url
+    });
   }
 
 }

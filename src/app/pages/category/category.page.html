@@ -11,22 +11,27 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-grid>
-    <ion-row *ngIf="(articleSourceStatus$|async).code !== 'loading'; else skeleton">
-      <ion-col *ngFor="let source of articleSources$|async" size-xs="6" size-sm="6" size-md="6" size-lg="6" size-xl="6">
-        <ion-card class="ion-activatable ripple-parent ion-no-margin" (click)="viewDetail(source)">
-          <ion-ripple-effect></ion-ripple-effect>
-          <ion-card-content>
-            <span> {{source.name}}</span>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <ng-container [ngSwitch]="(articleSourceStatus$|async).code">
+    <ion-grid *ngSwitchDefault>
+      <ion-row *ngIf="(articleSourceStatus$|async)?.code !== 'loading'; else skeleton">
+        <ion-col *ngFor="let source of articleSources$|async" size-xs="6" size-sm="6" size-md="4" size-lg="3"
+          size-xl="6">
+          <ion-card class="ion-activatable ripple-parent ion-no-margin" (click)="viewDetail(source)">
+            <ion-ripple-effect></ion-ripple-effect>
+            <ion-card-content>
+              <span> {{source.name}}</span>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <app-data-state *ngSwitchCase="'error'" [state]="(articleSourceStatus$|async)"></app-data-state>
+  </ng-container>
+
 </ion-content>
 <ng-template #skeleton>
   <ion-row>
-    <ion-col *ngFor="let num of [1,1,1,1,1,1,1,1,1,1]" size-xs="6" size-sm="6" size-md="6" size-lg="6" size-xl="6">
+    <ion-col *ngFor="let num of [1,1,1,1,1,1,1,1,1,1]" size-xs="6" size-sm="6" size-md="4" size-lg="3" size-xl="6">
       <ion-skeleton-text animated></ion-skeleton-text>
     </ion-col>
   </ion-row>

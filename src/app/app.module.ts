@@ -19,7 +19,9 @@ import { ComponentModule } from './components/component.module';
   imports: [
     BrowserModule,
     HttpClientModule,
-    IonicModule.forRoot(),
+    IonicModule.forRoot({
+      mode: 'ios'
+    }),
     AppRoutingModule,
     NgxsModule.forRoot([ArticleHeadlineState, ArticleState, ArticleSourceState])
   ],

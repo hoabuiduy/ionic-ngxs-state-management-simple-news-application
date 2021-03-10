@@ -24,7 +24,7 @@ export class SearchPage implements OnInit, OnDestroy {
 
   @Select(ArticleState.listArticle) listArticle$: Observable<ArticleModel[]>;
   @Select(ArticleState.filters) filters$: Observable<ArticleFilterModel>;
-  @Select(ArticleState.status) listArticleStatus$: Observable<string>;
+  @Select(ArticleState.status) listArticleStatus$: Observable<{ code, message }>;
   @Select(ArticleState.source) source$: Observable<ArticleSourceModel>;
 
   constructor(
@@ -47,6 +47,7 @@ export class SearchPage implements OnInit, OnDestroy {
           break;
         case 'success':
         case 'error':
+        case 'empty':
           this.infiniteEl?.complete();
           this.refresher?.complete();
           this.loadingEl?.dismiss();
@@ -111,7 +112,10 @@ export class SearchPage implements OnInit, OnDestroy {
     this.infiniteEl = infinite.target;
     const filters = this.store.selectSnapshot(ArticleState.filters);
     this.loadMoreArticle(filters);
-
+  }
+  disableLoadmore() {
+    const status = this.store.selectSnapshot(ArticleState.status);
+    return ['error', 'empty', 'nomore'].indexOf(status.code) > -1;
   }
   getListArticle(filters: ArticleFilterModel, status = 'loading') {
     this.store.dispatch(new GetArticleListAction({

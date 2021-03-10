@@ -28,7 +28,16 @@
 
   <h4 class="ion-text-right">{{article?.author}}</h4>
 
-  <ion-button (click)="openArticleOnBrowser(article)" expand="block" shape="round">
-    View full on Browser
-  </ion-button>
+
 </ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-button slot="start" (click)="openArticleOnBrowser(article)" expand="block" shape="round">
+      Open Browser
+    </ion-button>
+    <ion-button slot="end" expand="block" shape="round" (click)="share()">
+      <ion-icon slot="start" name="share"></ion-icon>
+      Share
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>
