@@ -11,7 +11,8 @@ import { ArticleState } from './core/states/articles/article.state';
 import { NewsInterceptor } from './core/services/interceptor';
 import { ArticleHeadlineState } from './core/states/article-headline/article-headline.state';
 import { ArticleSourceState } from './core/states/article-source/article-source.state';
-import { ComponentModule } from './components/component.module';
+import { IonicStorageModule } from '@ionic/storage';
+import { FavoriteArticleState } from './core/states/favorite-article/favorite-article.state';
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,8 +23,12 @@ import { ComponentModule } from './components/component.module';
     IonicModule.forRoot({
       mode: 'ios'
     }),
+    IonicStorageModule.forRoot({
+      name: '__mydb',
+      driverOrder: ['indexeddb', 'websql']
+    }),
     AppRoutingModule,
-    NgxsModule.forRoot([ArticleHeadlineState, ArticleState, ArticleSourceState])
+    NgxsModule.forRoot([ArticleHeadlineState, ArticleState, ArticleSourceState, FavoriteArticleState])
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

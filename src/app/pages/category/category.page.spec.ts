@@ -9,7 +9,7 @@ class NavMock {
   public navigateForward() {
   }
 }
-fdescribe('CategoryPage', () => {
+describe('CategoryPage', () => {
   let component: CategoryPage;
   let fixture: ComponentFixture<CategoryPage>;
 
@@ -34,7 +34,7 @@ fdescribe('CategoryPage', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  fit('ionInit', done => {
+  it('ionInit', done => {
     component.store.dispatch(new SetArticleSourceAction({
       id: 'abc'
     }))

@@ -11,5 +11,22 @@
       <ion-title size="large">Favorites</ion-title>
     </ion-toolbar>
   </ion-header>
-
+  <ion-grid *ngIf="(favoriteArticles$|async).length>0; else empty">
+    <ion-row>
+      <ion-col size="12" *ngFor="let n of favoriteArticles$|async">
+        <app-article [article]="n" (click)="viewDetail(n)"> </app-article>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
+<ng-template #empty>
+  <div class="empty">
+    <ion-icon name="warning" color="warning"></ion-icon>
+    <h1>
+      <ion-text color="medium">
+        There is no favorite articles
+      </ion-text>
+    </h1>
+  </div>
+
+</ng-template>

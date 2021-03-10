@@ -6,7 +6,17 @@ import { FavoritePage } from './favorite.page';
 const routes: Routes = [
   {
     path: '',
-    component: FavoritePage
+
+    children: [
+      {
+        path: '',
+        component: FavoritePage
+      },
+      {
+        path: 'articleDetail',
+        loadChildren: () => import('../article-detail/article-detail.module').then(m => m.ArticleDetailPageModule)
+      }
+    ]
   }
 ];
 
@@ -14,4 +24,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class FavoritePageRoutingModule {}
+export class FavoritePageRoutingModule { }

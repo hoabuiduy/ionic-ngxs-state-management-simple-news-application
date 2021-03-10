@@ -11,7 +11,7 @@
     </ion-toolbar>
   </ion-header>
 
-  <ng-container [ngSwitch]="(articleSourceStatus$|async).code">
+  <ng-container [ngSwitch]="(articleSourceStatus$|async)?.code">
     <ion-grid *ngSwitchDefault>
       <ion-row *ngIf="(articleSourceStatus$|async)?.code !== 'loading'; else skeleton">
         <ion-col *ngFor="let source of articleSources$|async" size-xs="6" size-sm="6" size-md="4" size-lg="3"
