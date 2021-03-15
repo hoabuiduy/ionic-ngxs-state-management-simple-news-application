@@ -20,7 +20,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <ng-container [ngSwitch]="(artcleHeadlineStatus$|async).code">
+  <ng-container [ngSwitch]="(artcleHeadlineStatus$|async)?.code">
     <ion-grid *ngSwitchDefault>
       <ion-row>
         <ion-col size="12" *ngFor="let n of articleHeadlines$|async ">
@@ -33,7 +33,7 @@
   </ng-container>
 
   <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMore($event)"
-    [disabled]="(artcleHeadlineStatus$|async).code === 'nomore'">
+    [disabled]="(artcleHeadlineStatus$|async)?.code === 'nomore'">
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>

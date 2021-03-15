@@ -4,23 +4,12 @@ import { ArticleSourceState } from './article-source.state';
 import { GetArticleSourceListAction } from './article-source.actions';
 import { ArticleService } from '../../services/article.service';
 import { ArticleSourceModel } from '../../models/article-source.model';
+import { articleSourceListResponseMock } from 'src/app/shared/mocks';
 
-const mockSources = {
-  data: {
-    sources: [
-      {
-        id: '1',
-        category: 'a',
-        country: 'us',
-        language: 'en'
-      }
-    ],
-    status: 'success'
-  }
-}
+
 fdescribe('ArticleSource actions', () => {
   let store: Store;
-  let valueServiceSpy: jasmine.SpyObj<ArticleService>;
+  let articleServiceSpy: jasmine.SpyObj<ArticleService>;
 
   beforeEach(async(() => {
     const spy = jasmine.createSpyObj('ArticleService', ['getArticleSources']);
@@ -34,26 +23,25 @@ fdescribe('ArticleSource actions', () => {
       ]
     }).compileComponents();
     store = TestBed.get(Store);
-    valueServiceSpy = TestBed.inject(ArticleService) as jasmine.SpyObj<ArticleService>;
+    articleServiceSpy = TestBed.inject(ArticleService) as jasmine.SpyObj<ArticleService>;
 
   }));
 
   it('should get list article source', fakeAsync(() => {
-    valueServiceSpy.getArticleSources.and.returnValue(new Promise(resolve => {
-      resolve(mockSources as any)
-    }));
+    articleServiceSpy.getArticleSources.and.returnValue(articleSourceListResponseMock as any)
     store.dispatch(new GetArticleSourceListAction());
     tick();
     store.select(ArticleSourceState.articleSources).subscribe((items: ArticleSourceModel[]) => {
-      expect(items).toEqual(jasmine.objectContaining([
-        {
-          id: '1',
-          category: 'a',
-          country: 'us',
-          language: 'en'
-        }
-      ]));
+      expect(items).toEqual(articleSourceListResponseMock.data.sources);
     });
   }));
+
+  it('should get status', () => {
+    const status = store.selectSnapshot(ArticleSourceState.status);
+    expect(status).toBeTruthy();
+    expect(status).toEqual({
+      code: 'initial'
+    });
+  })
 
 });

@@ -26,13 +26,13 @@ export class HomePage implements OnInit {
   constructor(
     private store: Store,
     private loadingCtrl: LoadingController,
-    private navCtrl: NavController,
+    public navCtrl: NavController,
     private toastCtrl: ToastController
   ) { }
 
   async ngOnInit() {
     this.artcleHeadlineStatus$.subscribe(async (data) => {
-      switch (data['code']) {
+      switch (data?.code) {
         case 'loading':
           this.loadingEl = await this.loadingCtrl.create();
           await this.loadingEl?.present();
@@ -42,7 +42,7 @@ export class HomePage implements OnInit {
           this.loadingEl?.dismiss();
           this.infiniteEl?.complete();
           this.refresher?.complete();
-          if (data['code'] === 'error') {
+          if (data?.code === 'error') {
             (await this.toastCtrl.create({
               message: data['message'],
               duration: 3000,

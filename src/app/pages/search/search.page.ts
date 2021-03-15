@@ -20,7 +20,7 @@ export class SearchPage implements OnInit, OnDestroy {
   public loadingEl: HTMLIonLoadingElement;
   public refresher: HTMLIonRefresherElement;
 
-  private triggerSearch: boolean = false;
+  public triggerSearch: boolean = false;
 
   @Select(ArticleState.listArticle) listArticle$: Observable<ArticleModel[]>;
   @Select(ArticleState.filters) filters$: Observable<ArticleFilterModel>;
@@ -28,19 +28,17 @@ export class SearchPage implements OnInit, OnDestroy {
   @Select(ArticleState.source) source$: Observable<ArticleSourceModel>;
 
   constructor(
-    private navCtrl: NavController,
-    private store: Store,
+    public navCtrl: NavController,
+    public store: Store,
     private loadingCtrl: LoadingController,
     private toast: ToastController) { }
 
   ngOnInit() {
-
-    const source = this.store.selectSnapshot(ArticleState.source);
     this.filters$.subscribe(data => {
-      this.keywords = data.keyword;
+      this.keywords = data?.keyword;
     });
     this.listArticleStatus$.subscribe(async (data) => {
-      switch (data['code']) {
+      switch (data?.code) {
         case 'loading':
           this.loadingEl = (await this.loadingCtrl.create());
           this.loadingEl?.present();
@@ -51,11 +49,11 @@ export class SearchPage implements OnInit, OnDestroy {
           this.infiniteEl?.complete();
           this.refresher?.complete();
           this.loadingEl?.dismiss();
-          if (data['code'] === 'error') {
+          if (data?.code === 'error') {
             (await this.toast.create({
               color: 'danger',
               duration: 3000,
-              message: data['message']
+              message: data?.message
             })).present();
           }
           break;
@@ -73,6 +71,7 @@ export class SearchPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     console.log('destroy search');
   }
+
   viewDetail(article: ArticleModel) {
     this.navCtrl.navigateForward(['tabs', 'search', 'articleDetail'], {
       state: {
@@ -100,6 +99,7 @@ export class SearchPage implements OnInit, OnDestroy {
     });
     this.triggerSearch = false;
   }
+
   doRefresh(refresher: any) {
     this.refresher = refresher?.target;
 
@@ -108,14 +108,15 @@ export class SearchPage implements OnInit, OnDestroy {
       page: 1
     }, 'initial')
   }
+
   loadMore(infinite: any) {
-    this.infiniteEl = infinite.target;
+    this.infiniteEl = infinite?.target;
     const filters = this.store.selectSnapshot(ArticleState.filters);
     this.loadMoreArticle(filters);
   }
   disableLoadmore() {
     const status = this.store.selectSnapshot(ArticleState.status);
-    return ['error', 'empty', 'nomore'].indexOf(status.code) > -1;
+    return ['error', 'empty', 'nomore'].indexOf(status?.code) > -1;
   }
   getListArticle(filters: ArticleFilterModel, status = 'loading') {
     this.store.dispatch(new GetArticleListAction({
@@ -133,6 +134,7 @@ export class SearchPage implements OnInit, OnDestroy {
   clearSource() {
     this.store.dispatch(new SetArticleSourceAction(null))
   }
+
   selectSource() {
     this.navCtrl.navigateForward(['tabs', 'category']);
   }

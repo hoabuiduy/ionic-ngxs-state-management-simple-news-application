@@ -19,7 +19,7 @@ export class CategoryPage implements OnInit {
 
   constructor(
     public store: Store,
-    private navCtrl: NavController
+    public navCtrl: NavController
   ) { }
 
   async ngOnInit() {

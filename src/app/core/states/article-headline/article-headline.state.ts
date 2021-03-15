@@ -44,6 +44,12 @@ export class ArticleHeadlineState {
     return state.status;
   }
 
+
+  @Selector()
+  static filters(state: ArticleHeadlineStateModel) {
+    return state.filters;
+  }
+
   @Action(GetListArticleHeadlineAction)
   async getListArticleHealine(ctx: StateContext<ArticleHeadlineStateModel>, action: GetListArticleHeadlineAction) {
     const state = ctx.getState();
@@ -53,7 +59,6 @@ export class ArticleHeadlineState {
       }
     });
     try {
-
       const res = await this.articleService.getArticleTopHeadlines({
         ...state.filters,
         page: 1

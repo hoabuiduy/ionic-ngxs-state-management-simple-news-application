@@ -31,7 +31,7 @@
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ng-container [ngSwitch]="(listArticleStatus$|async).code">
+  <ng-container [ngSwitch]="(listArticleStatus$|async)?.code">
     <ion-grid *ngSwitchDefault>
       <ion-row>
         <ion-col size="12" *ngFor="let n of listArticle$|async ">

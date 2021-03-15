@@ -15,7 +15,7 @@ export class ArticleDetailPage implements OnInit {
   article: ArticleModel;
 
   constructor(
-    private navCtrl: NavController,
+    public navCtrl: NavController,
     public store: Store
   ) { }
 

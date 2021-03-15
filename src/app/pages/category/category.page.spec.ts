@@ -1,6 +1,9 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule, NavController } from '@ionic/angular';
-import { NgxsModule } from '@ngxs/store';
+import { NgxsModule, Store } from '@ngxs/store';
+import { of } from 'rxjs';
+import { ArticleSourceModel } from 'src/app/core/models/article-source.model';
+import { GetArticleSourceListAction } from 'src/app/core/states/article-source/article-source.actions';
 import { SetArticleSourceAction } from 'src/app/core/states/articles/article.actions';
 import { ArticleState } from 'src/app/core/states/articles/article.state';
 
@@ -9,7 +12,7 @@ class NavMock {
   public navigateForward() {
   }
 }
-describe('CategoryPage', () => {
+fdescribe('CategoryPage', () => {
   let component: CategoryPage;
   let fixture: ComponentFixture<CategoryPage>;
 
@@ -34,12 +37,33 @@ describe('CategoryPage', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it('ionInit', done => {
-    component.store.dispatch(new SetArticleSourceAction({
-      id: 'abc'
-    }))
-    const source = component.store.selectSnapshot(ArticleState.source);
-    expect(source).toBeTruthy();
-    expect(source?.id).toEqual('abc');
+  it('#ngOnInit', fakeAsync(() => {
+    spyOn(component, 'getArticleSources');
+    component.ngOnInit();
+    expect(component.getArticleSources).toHaveBeenCalled();
+  }));
+
+  it('#viewDetail', () => {
+    spyOn(component.navCtrl, 'navigateForward');
+    spyOn(component, 'setArticleSource');
+    component.viewDetail({} as any);
+    expect(component.navCtrl.navigateForward).toHaveBeenCalledWith(['tabs', 'search'])
+    expect(component.setArticleSource).toHaveBeenCalled();
+  })
+
+  it('#getArticleSources', () => {
+    const dispatchSpy = spyOn(TestBed.inject(Store), 'dispatch').and.returnValue(of());
+    component.getArticleSources();
+    expect(dispatchSpy).toHaveBeenCalledWith(new GetArticleSourceListAction());
+  })
+
+  it('#setArticleSource', () => {
+    const source: ArticleSourceModel = {
+      id: '0',
+      name: 'abc'
+    }
+    const dispatchSpy = spyOn(TestBed.inject(Store), 'dispatch').and.returnValue(of());
+    component.setArticleSource(source);
+    expect(dispatchSpy).toHaveBeenCalledWith(new SetArticleSourceAction(source));
   })
 });

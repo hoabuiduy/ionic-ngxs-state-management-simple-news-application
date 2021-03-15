@@ -14,7 +14,6 @@ export class ArticleService {
   constructor() { }
 
   getArticleSources() {
-
     return Http.request({
       method: 'GET',
       url: this.buildUrl(API_PATH.SOURCES),

@@ -15,7 +15,7 @@ export interface ArticleSourceStateModel {
   name: 'articleSource',
   defaults: {
     status: {
-      code: ''
+      code: 'initial'
     },
     items: []
   }
