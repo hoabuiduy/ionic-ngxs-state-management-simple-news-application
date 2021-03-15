@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule, NavController } from '@ionic/angular';
+import { IonicStorageModule } from '@ionic/storage';
 import { NgxsModule } from '@ngxs/store';
 import { ArticleModel } from 'src/app/core/models/article.model';
 import { GetFavoriteArticleAction } from 'src/app/core/states/favorite-article/favorite-article.actions';
@@ -7,7 +8,7 @@ import { NavMock } from 'src/app/shared/mocks';
 
 import { FavoritePage } from './favorite.page';
 
-fdescribe('FavoritePage', () => {
+describe('FavoritePage', () => {
   let component: FavoritePage;
   let fixture: ComponentFixture<FavoritePage>;
 
@@ -16,7 +17,8 @@ fdescribe('FavoritePage', () => {
       declarations: [FavoritePage],
       imports: [
         IonicModule.forRoot(),
-        NgxsModule.forRoot()
+        NgxsModule.forRoot(),
+        IonicStorageModule.forRoot()
       ],
       providers: [
         {

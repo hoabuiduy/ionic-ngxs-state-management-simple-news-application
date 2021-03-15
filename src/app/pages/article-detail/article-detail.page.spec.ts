@@ -7,7 +7,7 @@ import { NavMock } from 'src/app/shared/mocks';
 
 import { ArticleDetailPage } from './article-detail.page';
 
-fdescribe('ArticleDetailPage', () => {
+describe('ArticleDetailPage', () => {
   let component: ArticleDetailPage;
   let fixture: ComponentFixture<ArticleDetailPage>;
 

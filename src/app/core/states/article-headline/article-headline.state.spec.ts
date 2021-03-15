@@ -6,7 +6,7 @@ import { ArticleService } from '../../services/article.service';
 import { articleListResponseMock } from 'src/app/shared/mocks';
 
 
-fdescribe('ArticleHeadline actions', () => {
+describe('ArticleHeadline actions', () => {
   let store: Store;
   let articleServiceSpy: jasmine.SpyObj<ArticleService>;
 

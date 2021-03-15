@@ -15,3 +15,7 @@ export class NavMock {
     public navigateForward() { }
     public back() { }
 }
+export class StorageMock {
+    public get(key: any) { }
+    public set(key: any, value: any) { }
+}

@@ -11,7 +11,7 @@ class NavMock {
 
   }
 }
-fdescribe('HomePage', () => {
+describe('HomePage', () => {
   let component: HomePage;
   let fixture: ComponentFixture<HomePage>;
 

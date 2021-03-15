@@ -8,7 +8,7 @@ import { NavMock } from 'src/app/shared/mocks';
 import { SearchPage } from './search.page';
 
 
-fdescribe('SearchPage', () => {
+describe('SearchPage', () => {
   let component: SearchPage;
   let fixture: ComponentFixture<SearchPage>;
   beforeEach(waitForAsync(() => {

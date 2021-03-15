@@ -1,5 +1,5 @@
 <div class="data-state ion-padding">
-  <ng-container [ngSwitch]="state.code">
+  <ng-container [ngSwitch]="state?.code">
     <ion-icon *ngSwitchCase="'error'" color="danger" name="remove-circle"></ion-icon>
     <ion-icon *ngSwitchCase="'empty'" color="warning" name="warning"></ion-icon>
   </ng-container>

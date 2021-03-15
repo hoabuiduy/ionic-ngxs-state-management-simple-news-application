@@ -12,7 +12,7 @@ class NavMock {
   public navigateForward() {
   }
 }
-fdescribe('CategoryPage', () => {
+describe('CategoryPage', () => {
   let component: CategoryPage;
   let fixture: ComponentFixture<CategoryPage>;
 
