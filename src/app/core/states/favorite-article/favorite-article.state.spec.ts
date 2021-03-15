@@ -1,4 +1,4 @@
-import { TestBed, async, inject } from '@angular/core/testing';
+import { TestBed, async, inject, fakeAsync, tick } from '@angular/core/testing';
 import { NgxsModule, Store } from '@ngxs/store';
 import { FavoriteArticleState } from './favorite-article.state';
 import { FavoriteArticleAddAction, GetFavoriteArticleAction } from './favorite-article.actions';
@@ -32,17 +32,12 @@ describe('FavoriteArticle actions', () => {
     });
   });
 
-  it('#GetFavoriteArticleAction', inject([Storage], (storage) => {
+  it('#GetFavoriteArticleAction', inject([Storage], fakeAsync((storage) => {
     spyOn(storage, 'get').and.returnValue(['abc']);
     store.dispatch(new GetFavoriteArticleAction());
+    tick();
     expect(storage.get).toHaveBeenCalledWith('favoriteArticles');
     const favs = store.selectSnapshot(FavoriteArticleState.articleList);
     expect(favs).toEqual(['abc'] as any);
-  }))
+  })));
 });
-/**
- *  const favorites = await this.storage.get('favoriteArticles');
-    ctx.patchState({
-      items: favorites || []
-    });
- */
